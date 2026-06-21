@@ -101,10 +101,7 @@
       transition:box-shadow .2s, transform .2s;
       position:relative;
     }
-    .post-note:nth-child(3n+1){transform:rotate(-1.2deg); background:var(--note-yellow)}
-    .post-note:nth-child(3n+2){transform:rotate(0.8deg);  background:var(--note-pink)}
-    .post-note:nth-child(3n+3){transform:rotate(-0.5deg); background:var(--note-green)}
-    .post-note:nth-child(4n){transform:rotate(1.1deg);    background:var(--note-blue)}
+    /* colours assigned per-post via JS */
     .post-note:hover{box-shadow:var(--shadow-hover);transform:rotate(0deg) scale(1.02)!important}
 
     /* sticky tab at top */
@@ -491,7 +488,7 @@
     const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhqamxkc3B5Z3N4enF4a2ZsdmZ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIwNjQyMDMsImV4cCI6MjA5NzY0MDIwM30.Tjs3Mx9i6O2e1r9_86eQ3nSR_-99UKiLTh8LKa3vRvk';
     const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
-    const NOTE_COLOURS = ['#FFF9B0','#FFD6D6','#D4E8FF','#EAD4FF','#D4F5D4'];
+    const NOTE_COLOURS = ['#FFF9B0','#FFD6D6','#D4E8FF','#EAD4FF','#D4F5D4','#FFE5C0','#C8F0F0','#F5D4E8','#E8F5C8','#FFD6F0'];
 
     function colourForId(id) {
       let hash = 0;
@@ -589,6 +586,7 @@
       const {data,error} = await db.from('replies').insert({post_id:_composePostId,content,author_name:author}).select().single();
       composeSendBtn.disabled=false; composeSendBtn.textContent='Send 💛';
       if(error){toast('Error: '+(error.message||error.code||'unknown'),true);console.error(error);return;}
+      if(data) saveMyReply(data.id);
       _composeMiniReplies.appendChild(renderMiniNote(data, _composeColour));
       closeComposeModal();
       toast('Reply pinned! 💛');
