@@ -773,7 +773,17 @@
       if(newPost) saveMyPost(newPost.id);
       contentEl.value='';
       toast('Pinned to the board! 🔒');
-      await loadFeed(false);
+      // Render the new post immediately without re-fetching
+      if(newPost){
+        const feed = document.getElementById('feed');
+        const emptyState = feed.querySelector('.empty-state');
+        if(emptyState) feed.innerHTML='';
+        const newCard = document.createElement('div');
+        feed.insertBefore(renderPost(newPost,[],true,0,0), feed.firstChild);
+        const countEl = document.getElementById('post-count');
+        const current = parseInt(countEl.textContent)||0;
+        countEl.textContent = `${current+1} note${current+1!==1?'s':''}`;
+      }
     });
 
     // ── Welcome modal (first 3 visits) ──
