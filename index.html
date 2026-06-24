@@ -773,17 +773,16 @@
       if(newPost) saveMyPost(newPost.id);
       contentEl.value='';
       toast('Pinned to the board! 🔒');
-      await loadFeed();
+      await loadFeed(false);
     });
 
-    // ── Welcome modal (first visit) ──
+    // ── Welcome modal (first 3 visits) ──
     const welcomeModal = document.getElementById('welcome-modal');
-    if(!localStorage.getItem('bbsoc_welcomed')){
-      welcomeModal.classList.add('open');
-    }
+    const visitCount = parseInt(localStorage.getItem('bbsoc_visits')||'0');
+    if(visitCount < 3) welcomeModal.classList.add('open');
     document.getElementById('welcome-go').addEventListener('click',()=>{
       welcomeModal.classList.remove('open');
-      localStorage.setItem('bbsoc_welcomed','1');
+      localStorage.setItem('bbsoc_visits', String(visitCount + 1));
     });
 
     loadFeed();
